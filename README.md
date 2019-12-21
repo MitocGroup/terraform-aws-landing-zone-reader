@@ -1,33 +1,24 @@
-# landing_zone_reader
+# terraform module `landing_zone_reader`
 [AWS Landing Zone](https://aws.amazon.com/solutions/aws-landing-zone/) is
 a solution that helps customers more quickly set up a secure, multi-account
-AWS environment based on AWS best practices. This repository contains terraform
-module `landing_zone` that dynamically deploys components of AWS Landing Zone
-solution based on input list of `.tfvars` files.
+AWS environment based on AWS best practices. This repository contains
+terraform module `landing_zone_reader` that allows read-only access into
+resources managed by terraform module `landing_zone`.
 
-Additionally, there are 2 more terraform modules: `landing_zone_reader_config`
-and `landing_zone_reader`. They allow AWS Landing Zone consumers to reuse
-terraform outputs programmatically. This way administrators of AWS Landing Zone
-control who can manage `landing_zone` module and who can consume `landing_zone`
-module's outputs in read-only mode.
-
-> NOTE: Current implementation is fully compatible with terraform v0.12+.
-Switch to branch `v0.11` if you still using terraform v0.11.x and below.
+RELATED: [terraform module `landing_zone`](https://github.com/MitocGroup/terraform-aws-landing-zone)
 
 
 ## Usage Example
 To get started, simply include the following terraform codebase:
 ```hcl
 module "landing_zone" {
-  source  = "./modules/landing_zone_reader"
+  source  = "MitocGroup/landing-zone-reader/aws"
+  version = "0.0.1"
 }
 ```
 
-> NOTE: Before using this module, make sure that `landing_zone_reader_config` module
-is executed first!
-
 ## More Examples
-* [Terraform module for AWS Lambda function using AWS Landing Zone reader](https://github.com/MitocGroup/terraform-aws-landing-zone/tree/master/examples/example_landing_zone_reader)
+* [Terraform module for AWS Lambda function using AWS Landing Zone reader](https://github.com/MitocGroup/terraform-aws-landing-zone-reader/tree/master/examples/example_landing_zone_reader)
 
 
 ## Why to Use This Solution
