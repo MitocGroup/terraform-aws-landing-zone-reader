@@ -2,8 +2,8 @@
 [AWS Landing Zone](https://aws.amazon.com/solutions/aws-landing-zone/) is
 a solution that helps customers more quickly set up a secure, multi-account
 AWS environment based on AWS best practices. This repository contains
-terraform module `landing_zone_reader` that allows read-only access into
-resources managed by terraform module `landing_zone`.
+terraform module `landing_zone_reader` that allows read-only access and
+view into resources managed by terraform module `landing_zone`.
 
 RELATED: [terraform module `landing_zone`](https://github.com/MitocGroup/terraform-aws-landing-zone)
 
