@@ -14,13 +14,13 @@ resource "null_resource" "terraform_config" {
 
   provisioner "local-exec" {
     when    = create
-    command = self.triggers.config ? "mv ${self.triggers.sample} ${self.triggers.root}" : "echo 'Root .terrahub.yml is ignored!'"
+    command = self.triggers.config ? "cp ${self.triggers.sample} ${self.triggers.root}" : "echo 'Root .terrahub.yml is ignored!'"
   }
 }
 
 resource "null_resource" "landing_zone_reader_config" {
   depends_on = [null_resource.terraform_config]
-  count = var.terraform_reader_config ? 1 : 0
+  count      = var.terraform_reader_config ? 1 : 0
 
   triggers = {
     module_path = path.module
@@ -36,7 +36,7 @@ resource "null_resource" "landing_zone_reader_config" {
       node ${self.triggers.module_path}/scripts/config.js
     EOC
 
-    environment  = {
+    environment = {
       MODULE_PATH = self.triggers.module_path
       ROOT_PATH   = self.triggers.root_path
       PROVIDERS   = self.triggers.providers
@@ -60,7 +60,7 @@ resource "null_resource" "landing_zone_reader_config" {
 
 resource "null_resource" "landing_zone_reader_apply" {
   depends_on = [null_resource.landing_zone_reader_config]
-  count = var.terraform_reader_config ? 1 : 0
+  count      = var.terraform_reader_config ? 1 : 0
 
   triggers = {
     module_path = path.module
