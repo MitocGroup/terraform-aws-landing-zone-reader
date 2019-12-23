@@ -25,13 +25,13 @@ variable "terraform_backend" {
 
 variable "terraform_config" {
   type        = bool
-  description = "The command that will be generate the `terraform` config file."
+  description = "If true, will generate root `.terrahub.yml` config."
   default     = true
 }
 
-variable "terraform_redeploy" {
+variable "terraform_reader_config" {
   type        = bool
-  description = "The command that will be generate the `terraform` config file."
+  description = "If true, will generate `landing_zone_reader_config`."
   default     = true
 }
 

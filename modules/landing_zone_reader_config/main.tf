@@ -20,7 +20,7 @@ resource "null_resource" "terraform_config" {
 
 resource "null_resource" "landing_zone_reader_config" {
   depends_on = [null_resource.terraform_config]
-  count = var.terraform_redeploy ? 1 : 0
+  count = var.terraform_reader_config ? 1 : 0
 
   triggers = {
     module_path = path.module
@@ -60,7 +60,7 @@ resource "null_resource" "landing_zone_reader_config" {
 
 resource "null_resource" "landing_zone_reader_apply" {
   depends_on = [null_resource.landing_zone_reader_config]
-  count = var.terraform_redeploy ? 1 : 0
+  count = var.terraform_reader_config ? 1 : 0
 
   triggers = {
     module_path = path.module
