@@ -23,6 +23,14 @@ variable "terraform_backend_config" {
   }
 }
 
+variable "terraform_backend_output" {
+  type        = map(string)
+  description = "This is the backend configure for output component."
+  default = {
+    path = "/tmp/.terrahub/landing_zone/landing_zone_reader_output/terraform.tfstate"
+  }
+}
+
 variable "terraform_config" {
   type        = bool
   description = "If true, will generate root `.terrahub.yml` config."
