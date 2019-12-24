@@ -7,27 +7,27 @@ resource "null_resource" "terraform_output" {
 resource "null_resource" "terraform_config" {
   depends_on = [null_resource.terraform_output]
   triggers = {
-    config  = var.terraform_config
-    example = ".terrahub.yml.example"
-    new     = ".terrahub.yml"
+    config = var.terraform_config
+    sample = ".terrahub.yml.sample"
+    root   = ".terrahub.yml"
   }
 
   provisioner "local-exec" {
     when    = create
-    command = self.triggers.config ? "mv ${self.triggers.example} ${self.triggers.new}" : "echo 'Terraform config is ignore!'"
+    command = self.triggers.config ? "cp ${self.triggers.sample} ${self.triggers.root}" : "echo 'Root .terrahub.yml is ignored!'"
   }
 }
 
 resource "null_resource" "landing_zone_reader_config" {
   depends_on = [null_resource.terraform_config]
-  count = var.terraform_redeploy ? 1 : 0
+  count      = var.terraform_reader_config ? 1 : 0
 
   triggers = {
+    module_path = path.module
+    root_path   = var.root_path
     providers   = jsonencode(var.landing_zone_providers)
     components  = jsonencode(var.landing_zone_components)
     backend     = jsonencode(var.terraform_backend)
-    module_path = path.module
-    root_path   = var.root_path
   }
 
   provisioner "local-exec" {
@@ -36,9 +36,9 @@ resource "null_resource" "landing_zone_reader_config" {
       node ${self.triggers.module_path}/scripts/config.js
     EOC
 
-    environment  = {
-      ROOT_PATH   = self.triggers.root_path
+    environment = {
       MODULE_PATH = self.triggers.module_path
+      ROOT_PATH   = self.triggers.root_path
       PROVIDERS   = self.triggers.providers
       COMPONENTS  = self.triggers.components
       BACKEND     = self.triggers.backend
@@ -60,13 +60,13 @@ resource "null_resource" "landing_zone_reader_config" {
 
 resource "null_resource" "landing_zone_reader_apply" {
   depends_on = [null_resource.landing_zone_reader_config]
-  count = var.terraform_redeploy ? 1 : 0
+  count      = var.terraform_reader_config ? 1 : 0
 
   triggers = {
-    components  = jsonencode(var.landing_zone_components)
-    backend     = jsonencode(var.terraform_backend)
     module_path = path.module
     root_path   = var.root_path
+    components  = jsonencode(var.landing_zone_components)
+    backend     = jsonencode(var.terraform_backend)
     timestamp   = timestamp()
   }
 
@@ -86,7 +86,7 @@ resource "null_resource" "landing_zone_reader_apply" {
   provisioner "local-exec" {
     when    = destroy
     command = <<-EOD
-      echo 'info: destroy ignored because part of apply'
+      echo 'info: destroy action ignored because part of landing_zone_reader_apply'
     EOD
   }
 }

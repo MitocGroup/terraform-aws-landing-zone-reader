@@ -1,33 +1,65 @@
-# landing_zone_reader
+# terraform module `landing_zone_reader`
 [AWS Landing Zone](https://aws.amazon.com/solutions/aws-landing-zone/) is
 a solution that helps customers more quickly set up a secure, multi-account
-AWS environment based on AWS best practices. This repository contains terraform
-module `landing_zone` that dynamically deploys components of AWS Landing Zone
-solution based on input list of `.tfvars` files.
+AWS environment based on AWS best practices. This repository contains
+terraform module `landing_zone_reader` that allows read-only access and
+view into resources managed by terraform module `landing_zone`.
 
-Additionally, there are 2 more terraform modules: `landing_zone_reader_config`
-and `landing_zone_reader`. They allow AWS Landing Zone consumers to reuse
-terraform outputs programmatically. This way administrators of AWS Landing Zone
-control who can manage `landing_zone` module and who can consume `landing_zone`
-module's outputs in read-only mode.
-
-> NOTE: Current implementation is fully compatible with terraform v0.12+.
-Switch to branch `v0.11` if you still using terraform v0.11.x and below.
+RELATED: [terraform module `landing_zone`](https://github.com/MitocGroup/terraform-aws-landing-zone)
 
 
 ## Usage Example
 To get started, simply include the following terraform codebase:
 ```hcl
-module "landing_zone" {
-  source  = "./modules/landing_zone_reader"
+module "landing_zone_reader" {
+  source  = "MitocGroup/landing-zone-reader/aws"
+  version = "0.0.1"
+  landing_zone_providers   = var.landing_zone_providers
+  landing_zone_components  = var.landing_zone_components
+  terraform_backend_type   = var.terraform_backend_type
+  terraform_backend_config = var.terraform_backend_config
+  terraform_reader_config  = var.terraform_reader_config
 }
 ```
+> NOTE: Make sure to include `variables.tf` and optionally `terraform.tfvars`
 
-> NOTE: Before using this module, make sure that `landing_zone_reader_config` module
-is executed first!
+To simplify and make it easier to understand, we included default values in `terraform.tfvars`:
+```hcl
+landing_zone_providers = {
+  default = {
+    account_id = "123456789012"
+    region     = "us-east-1"
+  }
+  [...]
+}
+landing_zone_components = {
+  landing_zone_vpc = "s3://terraform-aws-landing-zone/components/landing_zone_vpc/*.tfvars"
+  [...]
+}
+terraform_backend_type   = "s3"
+terraform_backend_config = {
+  bucket  = "terraform-aws-landing-zone"
+  key     = "terraform/landing_zone_reader_output/terraform.tfstate"
+  region  = "us-east-1"
+}
+terraform_reader_config = true
+```
 
-## More Examples
-* [Terraform module for AWS Lambda function using AWS Landing Zone reader](https://github.com/MitocGroup/terraform-aws-landing-zone/tree/master/examples/example_landing_zone_reader)
+> NOTE: Placeholder `[...]` from above is used to suggest that similar syntax can be added. Remove it or update in order to have valid HCL / terraform configuration.
+
+This means that before you use this terraform module, you will need to:
+1. Change `landing_zone_providers` to values that describe your AWS Organization account
+    * `default` reflects the default setup corresponding to AWS Organization account; add more providers by extending `landing_zone_providers` map with extra AWS accounts and/or AWS regions
+        * `account_id` reflects the AWS account used to deploy AWS resources; prevents provisioning AWS resources into wrong AWS account in case of valid AWS credentials
+        * `region` reflects the AWS region used to deploy AWS resources; create 2 different providers for the same AWS account, but different AWS regions
+2. Change `landing_zone_components` to values that fit into your AWS Landing Zone use case
+    * each key from `landing_zone_components` map represents the name of the component from [this list of available components](https://github.com/MitocGroup/terraform-aws-landing-zone/tree/master/components)
+    * each value from `landing_zone_components` map represents the path to `.tfvars` file on S3 and/or local disk
+        * each `.tfvars` file must use HCL format; DO NOT USE other formats like JSON or YAML
+3. Change `terraform_backend_type` and `terraform_backend_config` to values that reflect your terraform backend where `.tfstate` files are stored (in `variables.tf` default parameter value is defined as `local`)
+
+### More Examples
+* [Terraform module for AWS Lambda function using AWS Landing Zone reader](https://github.com/MitocGroup/terraform-aws-landing-zone-reader/tree/master/examples/example_landing_zone_reader)
 
 
 ## Why to Use This Solution

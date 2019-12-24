@@ -1,5 +1,5 @@
 component:
-  name: terrahub_load_outputs
+  name: landing_zone_reader_output
   template:
     resource:
       null_resource:

@@ -33,7 +33,7 @@ async function terrahubOutput(include, jsonBackend) {
     rootPath, 'terrahub',
     [
       'configure', '--config', 'component.template.data', '--delete',
-      '--auto-approve', '--include', 'terrahub_load_outputs'
+      '--auto-approve', '--include', 'landing_zone_reader_output'
     ]
   );
 
@@ -65,14 +65,14 @@ async function terrahubOutput(include, jsonBackend) {
   Helper.cli(
     rootPath, 'terrahub',
     [
-      'configure', '--include', 'terrahub_load_outputs', '--config',
+      'configure', '--include', 'landing_zone_reader_output', '--config',
       `component.template.output.terrahub_reader.value=merge(${outputMap.join(',')})`
     ]);
 
 
   Helper.cli(
     rootPath, 'terrahub',
-    ['run', '--include', 'terrahub_load_outputs', '--apply', '--auto-approve']
+    ['run', '--include', 'landing_zone_reader_output', '--apply', '--auto-approve']
   );
 
   return 'Success';
@@ -87,7 +87,7 @@ async function terrahubOutput(include, jsonBackend) {
 async function extractOutputValues(result, jsonBackend) {
   const processes = [];
   let outputMap = [];
-  const terrahubConfig = ['configure', '--include', 'terrahub_load_outputs', '--config'];
+  const terrahubConfig = ['configure', '--include', 'landing_zone_reader_output', '--config'];
   const jsonResult = JSON.parse(result);
 
   Object.keys(jsonResult).forEach(key => {
@@ -154,7 +154,7 @@ async function main() {
 (async () => {
   try {
     checkEnvironmentVars();
-    Helper.checkIfTerrahubIsInstalled();
+    Helper.isTerrahubAvailable();
     const resp = await main();
 
     console.log(resp);
