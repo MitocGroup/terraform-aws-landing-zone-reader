@@ -66,7 +66,7 @@ async function terrahubOutput(include, jsonBackend) {
     rootPath, 'terrahub',
     [
       'configure', '--include', 'landing_zone_reader_output', '--config',
-      `component.template.output.terrahub_reader.value=merge(${outputMap.join(',')})`
+      `component.template.output.landing_zone_reader.value=merge(${outputMap.join(',')})`
     ]);
 
 

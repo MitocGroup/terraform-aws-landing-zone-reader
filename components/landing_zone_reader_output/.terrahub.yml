@@ -7,6 +7,6 @@ component:
           triggers:
             timestamp: timestamp()
     output:
-      terrahub_reader:
+      landing_zone_reader:
         value: >-
           merge(map("ids", "test"))
