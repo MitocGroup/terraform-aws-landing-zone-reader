@@ -55,9 +55,10 @@ async function terrahubOutput(include, jsonBackend) {
       }
 
       const outputValues = await extractOutputValues(result, jsonBackend);
-      const prepareOutput = `map(${outputValues.join(',')})`;
-
-      outputMap = [...outputMap, ...[prepareOutput]];
+      if (outputValues.length > 0) {
+        const prepareOutput = `map(${outputValues.join(',')})`;
+        outputMap = [...outputMap, ...[prepareOutput]];
+      }
     })
   );
 
@@ -123,7 +124,7 @@ async function extractOutputValues(result, jsonBackend) {
       ]);
     });
 
-    Object.keys(jsonResult[key]).filter(elem => elem.includes('landing_zone') ).forEach(subKey => {
+    Object.keys(jsonResult[key]).filter(elem => elem.includes('landing_zone')).forEach(subKey => {
       outputMap = [...outputMap, ...[`"${subKey}"`, `data.terraform_remote_state.${key}.outputs.${subKey}`]];
     });
   });
