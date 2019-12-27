@@ -1,0 +1,12 @@
+component:
+  name: landing_zone_reader_output
+  template:
+    resource:
+      null_resource:
+        everytime:
+          triggers:
+            timestamp: timestamp()
+    output:
+      landing_zone_reader:
+        value: >-
+          merge(map("ids", "test"))
