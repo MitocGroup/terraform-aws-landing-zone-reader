@@ -143,6 +143,9 @@ async function extractOutputValues(result, jsonBackend) {
  * @return {Promise}
  */
 async function main() {
+  checkEnvironmentVars();
+  Helper.isTerrahubAvailable();
+
   const jsonBackend = JSON.parse(backend);
   const jsonComponents = JSON.parse(components);
   const include = [];
@@ -154,8 +157,6 @@ async function main() {
 
 (async () => {
   try {
-    checkEnvironmentVars();
-    Helper.isTerrahubAvailable();
     const resp = await main();
 
     console.log(resp);

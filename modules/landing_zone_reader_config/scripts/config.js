@@ -34,6 +34,9 @@ function checkEnvironmentVars() {
  * @return {Promise}
  */
 async function main() {
+  checkEnvironmentVars();
+  Helper.isTerrahubAvailable();
+
   const processes = await Helper.updateConfig(rootPath, modulePath, providers, backend, components);
 
   try {
@@ -48,8 +51,6 @@ async function main() {
 
 (async () => {
   try {
-    checkEnvironmentVars();
-    Helper.isTerrahubAvailable();
     const resp = await main();
 
     console.log(resp);
