@@ -8,5 +8,9 @@ checks:
     config:
       threshold: 55
 plugins:
+  nodesecurity:
+    enabled: true
+  structure:
+    enabled: true
   duplication:
     enabled: false
