@@ -13,7 +13,7 @@ To get started, simply include the following terraform codebase:
 ```hcl
 module "landing_zone_reader" {
   source  = "MitocGroup/landing-zone-reader/aws"
-  version = "0.0.1"
+  version = "0.0.2"
   landing_zone_providers   = var.landing_zone_providers
   landing_zone_components  = var.landing_zone_components
   terraform_backend_type   = var.terraform_backend_type
